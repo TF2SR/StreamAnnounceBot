@@ -1,0 +1,7 @@
+.gradle
+run/config.json
+run/StreamAnnounce.jar
+
+**/build/
+
+.idea/
