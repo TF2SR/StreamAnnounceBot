@@ -5,10 +5,13 @@ import com.google.gson.stream.JsonReader
 import me.fzzy.announcebot.util.FileHelper
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import net.dv8tion.jda.api.utils.messages.MessageCreateData
 import net.sourceforge.tess4j.Tesseract
+import net.sourceforge.tess4j.TesseractException
 import org.json.JSONArray
 import java.awt.Color
 import java.awt.Image
@@ -56,6 +59,8 @@ class Race {
             val member = event.member ?: return
             val channel = event.channel
 
+            log.info("[${event.guild.name}][${channel.name}] ${event.author.name}: ${event.message.contentDisplay}")
+
             if (member.hasPermission(Permission.MANAGE_SERVER) || cli.retrieveApplicationInfo()
                     .complete().owner.idLong == member.idLong
             ) {
@@ -87,7 +92,7 @@ class Race {
                         description += "$start ${m.asMention} - ${formatTime(raceTime)}\n"
                     }
                     embed.setDescription(description)
-                    channel.sendMessage(embed.build()).queue()
+                    channel.sendMessage(MessageCreateData.fromEmbeds(embed.build())).queue()
                     currentRaces.remove(channel.idLong)
                 }
             }
@@ -114,42 +119,49 @@ class Race {
                                 together += "$text\n"
                             }
                             val time = decipherTime(together)
+                            log.info("found time: $time")
                             if (time == 0L) return
                             channel.sendMessage("${event.author.asMention} ${formatTime(time)} is the time i found, is that correct?")
                                 .queue { msg ->
                                     run {
-                                        msg.addReaction("✅").queue {
-                                            msg.addReaction("❌").queue()
+                                        msg.addReaction(Emoji.fromUnicode("✅")).queue {
+                                            msg.addReaction(Emoji.fromUnicode("❌")).queue()
                                         }
                                         pendingTimes[msg.idLong] = time
                                     }
                                 }
                         }
+                        else {
+                            log.error("img empty")
+                        }
                     }
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    log.error("$e")
                 }
             }
         }
 
-        override fun onGuildMessageReactionAdd(event: GuildMessageReactionAddEvent) {
+        override fun onMessageReactionAdd(event: MessageReactionAddEvent) {
             if (pendingTimes.containsKey(event.messageIdLong)) {
                 event.channel.retrieveMessageById(event.messageIdLong).queue { msg ->
                     run {
-                        val who = msg.mentionedMembers[0]
-                        if (event.member.idLong == who.idLong) {
+                        log.info("${msg.mentions.users}")
+                        val who = msg.mentions.users[0]
+                        if (event.member!!.idLong == who.idLong) {
                             val race = currentRaces[event.channel.idLong]!!
                             val time = pendingTimes[event.messageIdLong]!!
                             pendingTimes.remove(event.messageIdLong)
 
-                            if (event.reactionEmote.emoji == "✅") {
-                                race.times[who.idLong] = time
-                                msg.delete().queue()
-                            } else if (event.reactionEmote.emoji == "❌") {
-                                event.channel.sendMessage("${who.asMention} What was your time?")
-                                    .queue { msg -> watchingForTime[who.idLong] = msg.idLong }
-                                msg.delete().queue()
-                            }
+                            try {
+                                if (event.reaction.emoji.name == "✅") {
+                                    race.times[who.idLong] = time
+                                    msg.delete().queue()
+                                } else if (event.reaction.emoji.name == "❌") {
+                                    event.channel.sendMessage("${who.asMention} What was your time?")
+                                        .queue { msg -> watchingForTime[who.idLong] = msg.idLong }
+                                    msg.delete().queue()
+                                }
+                            } catch (_: IllegalStateException) {}
                         }
                     }
                 }
@@ -237,11 +249,17 @@ class Race {
             tess.setTessVariable("tessedit_char_whitelist", "0123456789:.")
             tess.setLanguage("eng")
             tess.setDatapath(File("tessdata").toString())
+            var pass1 = ""
+            var pass2 = ""
 
-            tess.setPageSegMode(11)
-            val pass1 = tess.doOCR(img)
-            tess.setPageSegMode(7)
-            val pass2 = tess.doOCR(img)
+            try {
+                tess.setPageSegMode(11)
+                pass1 = tess.doOCR(img)
+                tess.setPageSegMode(7)
+                pass2 = tess.doOCR(img)
+            } catch (e: TesseractException) {
+                log.error("error performing OCR: ${e}")
+            }
 
             return "$pass1\n$pass2"
         }

@@ -72,7 +72,8 @@ class RoleUpdater {
         if (runnerRole == null) runnerRole = channel.guild.getRoleById(config.runnerRole)
 
         if (iterator == null || !iterator!!.hasNext()) {
-            val board = Leaderboard.forCategory(Category.fromID("wdmq1xe2"), "?var-5lyj7d2l=jq6yp5j1")
+            //val board = Leaderboard.forCategory(Category.fromID("wdmq1xe2"), "?var-5lyj7d2l=jq6yp5j1")
+            val board = Leaderboard.forCategory(Category.fromID("wdmq1xe2"))
             iterator = board.runs.iterator()
             channel.guild.loadMembers()
         } else {

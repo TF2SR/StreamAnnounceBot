@@ -1,6 +1,6 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.0.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+    id 'com.gradleup.shadow' version '8.3.0'
+    id 'org.jetbrains.kotlin.jvm' version '2.0.10'
 }
 
 group 'me.fzzy.streamannounce'
@@ -10,6 +10,7 @@ repositories {
     mavenCentral()
     jcenter()
     google()
+    maven { url 'https://jitpack.io' }
 }
 
 shadowJar {
@@ -22,23 +23,24 @@ shadowJar {
 }
 
 dependencies {
-    compile 'com.google.api-client:google-api-client:1.23.0'
-    compile 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
-    compile 'com.google.apis:google-api-services-calendar:v3-rev355-1.25.0'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.3.0-alpha4'
-    compile 'net.dv8tion:JDA:4.2.0_227'
-    implementation("club.minnced:jda-reactor:1.2.0")
-    compile 'com.google.code.gson:gson:2.8.5'
-    compile group: 'org.json', name: 'json', version: '20180813'
-    implementation 'com.github.scribejava:scribejava-apis:6.4.1'
-    compile group: 'net.sourceforge.tess4j', name: 'tess4j', version: '4.5.3'
+    implementation 'com.google.api-client:google-api-client:2.6.0'
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.36.0'
+    implementation 'com.google.apis:google-api-services-calendar:v3-rev411-1.25.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.0.10"
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.16'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.7'
+    implementation 'net.dv8tion:JDA:5.0.2'
+    implementation "com.github.MinnDevelopment:jda-reactor:1.5.0"
+    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation group: 'org.json', name: 'json', version: '20240303'
+    implementation 'com.github.scribejava:scribejava-apis:8.3.3'
+    implementation group: 'net.sourceforge.tess4j', name: 'tess4j', version: '5.12.0'
+    implementation("com.github.s5bug:Speedrun4J:a15010becb")
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "21"
 }
 compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "21"
 }

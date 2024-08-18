@@ -7,10 +7,10 @@ import com.github.scribejava.core.model.OAuth2AccessToken
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
-import com.tsunderebug.speedrun4j.game.Category
-import com.tsunderebug.speedrun4j.game.Game
-import com.tsunderebug.speedrun4j.game.GameList
-import com.tsunderebug.speedrun4j.game.Leaderboard
+//import com.tsunderebug.speedrun4j.game.Category
+//import com.tsunderebug.speedrun4j.game.Game
+//import com.tsunderebug.speedrun4j.game.GameList
+//import com.tsunderebug.speedrun4j.game.Leaderboard
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity
@@ -40,7 +40,7 @@ val log = Loggers.getLogger("StreamAnnounce")
 
 val gson = Gson()
 
-const val speedRunTagId = "7cefbf30-4c3e-4aa7-99cd-70aabb662f27"
+const val speedRunTagId = "Speedrun"
 
 class Config {
     val broadcastChannelId = 0L
@@ -145,7 +145,9 @@ fun main() {
     cli = JDABuilder.createDefault(config.discordToken)
         //.setMemberCachePolicy(MemberCachePolicy.ALL)
         //.enableIntents(GatewayIntent.GUILD_MEMBERS)
-        .setActivity(presence)
+        .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS)
+        //.setActivity(presence)
+        .setActivity(Activity.playing("testing"))
         .addEventListeners(PresenceListener, BlacklistCommand, Race)
         .build()
 }

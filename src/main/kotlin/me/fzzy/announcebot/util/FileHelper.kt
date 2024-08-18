@@ -1,8 +1,6 @@
 package me.fzzy.announcebot.util
 
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.entities.MessageChannel
-import net.dv8tion.jda.api.entities.TextChannel
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File

@@ -133,11 +133,12 @@ class StreamScanner(game: String) {
         val twitchId = json.getLong("user_id")
         val tags = arrayListOf<String>()
         try {
-            val jsonTags = json.getJSONArray("tag_ids")
+            val jsonTags = json.getJSONArray("tags")
             for (i in 0 until jsonTags.length()) {
                 tags.add(jsonTags.getString(i))
             }
         } catch (e: Exception) {
+            log.error("failure getting tags: $e")
         }
         return getStream(title, username, twitchId, tags)
     }
