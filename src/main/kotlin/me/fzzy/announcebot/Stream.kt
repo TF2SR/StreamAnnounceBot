@@ -22,18 +22,24 @@ class Stream constructor(
 
     fun online() {
         verifiedOnline = true
-        if (online) return
-        if (!tags.contains(speedRunTagId)) return
-        //if (!title.contains("pugs")
-            //&& !title.contains("pickup games")
-            //&& !title.contains("scrims")) return
-            //&& !title.contains("tournament")
-            //&& !title.contains("tourney")
-            //&& !title.contains("tourny")) return
-        online = true
-        log.info("$username is now live.")
-        broadcastStream()
-        handleRole(username)
+        if (!online) {
+            if (
+                tags.contains("Speedrun") ||
+                tags.contains("speedrun") ||
+                title.lowercase().contains("speedrun")
+                ) {
+                //if (!title.contains("pugs")
+                //&& !title.contains("pickup games")
+                //&& !title.contains("scrims")) return
+                //&& !title.contains("tournament")
+                //&& !title.contains("tourney")
+                //&& !title.contains("tourny")) return
+                online = true
+                log.info("$username is now live.")
+                broadcastStream()
+                handleRole(username)
+            }
+        }
     }
 
     private fun broadcastStream() {

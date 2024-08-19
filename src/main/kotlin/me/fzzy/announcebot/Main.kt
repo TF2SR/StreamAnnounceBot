@@ -56,6 +56,7 @@ class Config {
     val scanIntervalSeconds = 30L
     val topRoles = hashMapOf<Int, Long>()
     val runnerRole = 0L
+    val racerRole = 0L
 }
 
 lateinit var config: Config

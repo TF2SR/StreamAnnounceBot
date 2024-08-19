@@ -59,10 +59,10 @@ class Race {
             val member = event.member ?: return
             val channel = event.channel
 
-            log.info("[${event.guild.name}][${channel.name}] ${event.author.name}: ${event.message.contentDisplay}")
-
-            if (member.hasPermission(Permission.MANAGE_SERVER) || cli.retrieveApplicationInfo()
-                    .complete().owner.idLong == member.idLong
+            if (
+                member.hasPermission(Permission.MANAGE_SERVER)
+                //|| cli.retrieveApplicationInfo().complete().owner.idLong == member.idLong
+                || member.roles.contains(event.guild.getRoleById(config.racerRole))
             ) {
                 if (event.message.contentRaw == "go epic mode") {
                     currentRaces[channel.idLong] = Race()
@@ -81,8 +81,7 @@ class Race {
                     val sortedMap = race.times.toSortedMap(compareBy { race.times[it] })
                     var place = 0
                     for ((id, raceTime) in sortedMap) {
-                        val m = event.guild.getMemberById(id) ?: continue
-
+                        val m = event.guild.retrieveMemberById(id).complete() ?: continue
                         val start = when (place++) {
                             0 -> "\uD83E\uDD47"
                             1 -> "\uD83E\uDD48"

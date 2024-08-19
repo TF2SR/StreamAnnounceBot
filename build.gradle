@@ -13,6 +13,15 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+// download eng.traineddata
+tasks.register('tessdata') {
+    project.mkdir("run/tessdata")
+    def f = new File('run/tessdata/eng.traineddata')
+    if (!f.exists()) {
+        new URI('https://github.com/tesseract-ocr/tessdata/raw/main/eng.traineddata').toURL().withInputStream { i -> f.withOutputStream { it << i } }
+    }
+}
+
 shadowJar {
     manifest {
         attributes 'Main-Class': 'me.fzzy.announcebot.MainKt'
@@ -21,6 +30,7 @@ shadowJar {
     destinationDirectory = file("run")
     archiveFileName = "StreamAnnounce.jar"
 }
+tasks.shadowJar.dependsOn(tessdata)
 
 dependencies {
     implementation 'com.google.api-client:google-api-client:2.6.0'

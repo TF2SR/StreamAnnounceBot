@@ -1,6 +1,9 @@
 .gradle
-run/config.json
+run/*.json
 run/StreamAnnounce.jar
+run/cache/
+run/tessdata/
+
 
 **/build/
 
