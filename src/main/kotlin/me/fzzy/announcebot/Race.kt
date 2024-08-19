@@ -214,13 +214,13 @@ class Race {
                         if (colonSplit[colonSplit.size - 1].contains(".")) {
                             try {
                                 millis = colonSplit[colonSplit.size - 1].split(".")[1].toInt()
-                            } catch (e: java.lang.NumberFormatException) {
+                            } catch (_: java.lang.NumberFormatException) {
                             }
                         }
 
                         val total = (hours * 60 * 60 * 1000) + (minutes * 60 * 1000) + (seconds * 1000) + millis
                         if (total > max) max = total.toLong()
-                    } catch (e: NumberFormatException) {
+                    } catch (_: NumberFormatException) {
                     }
                 }
             }
@@ -244,8 +244,8 @@ class Race {
             bs.flush()
             channel.sendFile(bs.toByteArray(), "bruh.png").queue()*/
 
-            tess.setTessVariable("user_defined_dpi", "144")
-            tess.setTessVariable("tessedit_char_whitelist", "0123456789:.")
+            tess.setVariable("user_defined_dpi", "144")
+            tess.setVariable("tessedit_char_whitelist", "0123456789:.")
             tess.setLanguage("eng")
             tess.setDatapath(File("tessdata").toString())
             var pass1 = ""

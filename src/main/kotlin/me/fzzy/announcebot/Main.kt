@@ -1,46 +1,34 @@
 package me.fzzy.announcebot
 
-import com.github.scribejava.apis.LinkedInApi20
-import com.github.scribejava.apis.TwitterApi
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.model.OAuth2AccessToken
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
-//import com.tsunderebug.speedrun4j.game.Category
-//import com.tsunderebug.speedrun4j.game.Game
-//import com.tsunderebug.speedrun4j.game.GameList
-//import com.tsunderebug.speedrun4j.game.Leaderboard
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.requests.GatewayIntent
-import net.dv8tion.jda.api.utils.MemberCachePolicy
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpGet
-import org.apache.http.client.utils.URIBuilder
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.util.EntityUtils
 import org.json.JSONArray
 import org.json.JSONObject
 import reactor.core.scheduler.Schedulers
 import reactor.util.Loggers
-import java.io.*
-import java.lang.StringBuilder
-import java.net.HttpURLConnection
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
+import java.io.InputStreamReader
 import java.net.URI
-import java.net.URL
 import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.collections.HashMap
 import kotlin.system.exitProcess
 
 lateinit var cli: JDA
 val log = Loggers.getLogger("StreamAnnounce")
 
 val gson = Gson()
-
-const val speedRunTagId = "Speedrun"
 
 class Config {
     val broadcastChannelId = 0L
@@ -147,8 +135,7 @@ fun main() {
         //.setMemberCachePolicy(MemberCachePolicy.ALL)
         //.enableIntents(GatewayIntent.GUILD_MEMBERS)
         .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS)
-        //.setActivity(presence)
-        .setActivity(Activity.playing("testing"))
+        .setActivity(presence)
         .addEventListeners(PresenceListener, BlacklistCommand, Race)
         .build()
 }

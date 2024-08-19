@@ -108,7 +108,7 @@ class StreamScanner(game: String) {
 
     fun getStream(username: String): Stream? {
         for ((_, stream) in streams) {
-            if (stream.username.toLowerCase() == username.toLowerCase()) return stream
+            if (stream.username.lowercase() == username.lowercase()) return stream
         }
         return null
     }

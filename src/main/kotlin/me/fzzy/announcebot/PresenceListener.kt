@@ -11,7 +11,7 @@ object PresenceListener : ListenerAdapter() {
         for (activity in event.member.activities) {
             if (activity.type == Activity.ActivityType.STREAMING) {
                 val split = (activity.url ?: continue).split("/")
-                val username = split[split.size - 1].toLowerCase()
+                val username = split[split.size - 1].lowercase()
                 streamingPresenceUsers[username] = event.member.idLong
                 handleRole(event.member.idLong)
                 return

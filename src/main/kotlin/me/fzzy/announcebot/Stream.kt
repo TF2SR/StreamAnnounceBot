@@ -1,5 +1,8 @@
 package me.fzzy.announcebot
 
+import java.util.*
+import kotlin.collections.ArrayList
+
 class Stream constructor(
     var title: String,
     var username: String,
@@ -48,7 +51,7 @@ class Stream constructor(
             log.info("$username broadcast ignored because of broadcast cooldown")
             return
         }
-        if (blacklist.contains(username.toLowerCase())) {
+        if (blacklist.contains(username.lowercase())) {
             log.info("$username went live but was ignored because they are on the blacklist.")
             return
         }
